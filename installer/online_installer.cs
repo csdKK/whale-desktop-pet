@@ -304,6 +304,10 @@ namespace WhalePetOnlineInstaller
                 string mainPy = Path.Combine(installDir, "main.py");
                 CreateDesktopShortcut(pythonExe, mainPy);
 
+                lblStatus.Text = "注册卸载信息...";
+                CreateUninstallScript(installDir);
+                RegisterUninstallEntry(installDir);
+
                 progressBar.Value = 100;
                 lblStatus.Text = "安装完成！";
             }
@@ -481,6 +485,64 @@ namespace WhalePetOnlineInstaller
             smShortcut.Arguments = "\"" + mainPy + "\"";
             smShortcut.WorkingDirectory = installDir;
             smShortcut.Save();
+        }
+
+        private void CreateUninstallScript(string installDir)
+        {
+            string uninstallBat = Path.Combine(installDir, "uninstall.bat");
+            string startMenuDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs", "鲸鱼娘桌宠");
+            string desktopLnk = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "鲸鱼娘桌宠.lnk");
+            string regExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "reg.exe");
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("@echo off\r\n");
+            sb.Append("echo 正在卸载鲸鱼娘桌宠...\r\n");
+            sb.Append("timeout /t 1 >nul\r\n");
+            sb.Append("taskkill /f /im pythonw.exe 2>nul\r\n");
+            sb.Append("taskkill /f /im python.exe 2>nul\r\n");
+            sb.Append("echo 删除快捷方式...\r\n");
+            sb.Append("del /q \"" + desktopLnk.Replace("\\", "\\\\") + "\" 2>nul\r\n");
+            sb.Append("rmdir /s /q \"" + startMenuDir.Replace("\\", "\\\\") + "\" 2>nul\r\n");
+            sb.Append("echo 删除注册表项...\r\n");
+            sb.Append("\"" + regExe.Replace("\\", "\\\\") + "\" delete \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\WhalePet\" /f >nul 2>nul\r\n");
+            sb.Append("echo 删除安装目录...\r\n");
+            sb.Append("cd /d \"" + installDir.Replace("\\", "\\\\") + "\"\r\n");
+            sb.Append("cd ..\r\n");
+            sb.Append("rmdir /s /q \"" + installDir.Replace("\\", "\\\\") + "\" 2>nul\r\n");
+            sb.Append("echo 卸载完成！\r\n");
+            sb.Append("timeout /t 2 >nul\r\n");
+
+            File.WriteAllText(uninstallBat, sb.ToString(), Encoding.Default);
+        }
+
+        private void RegisterUninstallEntry(string installDir)
+        {
+            try
+            {
+                string uninstallBat = Path.Combine(installDir, "uninstall.bat");
+                string regPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\WhalePet";
+
+                using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(regPath))
+                {
+                    if (key != null)
+                    {
+                        key.SetValue("DisplayName", "鲸鱼娘桌宠");
+                        key.SetValue("DisplayVersion", "1.0.0");
+                        key.SetValue("Publisher", "csdKK");
+                        key.SetValue("InstallLocation", installDir);
+                        key.SetValue("UninstallString", "\"" + uninstallBat + "\"");
+                        key.SetValue("DisplayIcon", Path.Combine(installDir, "圆角-蓝色大肥鱼.ico"));
+                        key.SetValue("EstimatedSize", 1578 * 1024, Microsoft.Win32.RegistryValueKind.DWord);
+                        key.SetValue("NoModify", 1, Microsoft.Win32.RegistryValueKind.DWord);
+                        key.SetValue("NoRepair", 1, Microsoft.Win32.RegistryValueKind.DWord);
+                        key.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("注册表写入失败：{0}", ex.Message));
+            }
         }
     }
 
