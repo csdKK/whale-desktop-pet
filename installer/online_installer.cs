@@ -21,6 +21,8 @@ namespace WhalePetOnlineInstaller
             "https://gh-proxy.com/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
             "https://ghproxy.net/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
             "https://ghps.cc/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
+            "https://gh.api.99988866.xyz/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
+            "https://github.moeyy.xyz/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
             "https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
         };
         private static readonly string MANIFEST_URL = "https://gh-proxy.com/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json";
@@ -44,7 +46,11 @@ namespace WhalePetOnlineInstaller
         {
             httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromMinutes(10);
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            try
+            {
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072 | (SecurityProtocolType)768 | (SecurityProtocolType)192;
+            }
+            catch { }
 
             this.Text = "鲸鱼娘桌宠 - 在线安装";
             this.Width = 520;
@@ -140,20 +146,32 @@ namespace WhalePetOnlineInstaller
                 "https://gh-proxy.com/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
                 "https://ghproxy.net/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
                 "https://ghps.cc/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
+                "https://gh.api.99988866.xyz/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
+                "https://github.moeyy.xyz/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
                 "https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
             };
+            System.Text.StringBuilder errors = new System.Text.StringBuilder();
             foreach (string url in manifestUrls)
             {
                 try
                 {
-                    return await httpClient.GetStringAsync(url);
+                    string content = await httpClient.GetStringAsync(url);
+                    if (string.IsNullOrEmpty(content) || content.TrimStart().StartsWith("{"))
+                    {
+                        if (!string.IsNullOrEmpty(content) && content.TrimStart().StartsWith("{"))
+                            return content;
+                        errors.AppendLine(url + " 返回内容为空");
+                        continue;
+                    }
+                    errors.AppendLine(url + " 返回内容非 JSON（前50字符: " + (content.Length > 50 ? content.Substring(0, 50) : content) + "）");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    errors.AppendLine(url + " 失败: " + ex.Message);
                     continue;
                 }
             }
-            throw new Exception("所有镜像源均不可用");
+            throw new Exception("所有镜像源均不可用\n\n" + errors.ToString());
         }
 
         private async Task LoadManifestAsync()
