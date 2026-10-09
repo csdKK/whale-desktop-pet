@@ -1,0 +1,251 @@
+{
+  "version": "1.0.0",
+  "packages": {
+    "python-runtime": {
+      "target_dir": "python",
+      "parts": [
+        {
+          "name": "python-runtime.part01.zip",
+          "size": 19743268,
+          "md5": "c4826127d6ff285c07415eb91c4b30c3"
+        },
+        {
+          "name": "python-runtime.part02.zip",
+          "size": 15915184,
+          "md5": "587a2365ead5cf6639e2108ebd723e06"
+        },
+        {
+          "name": "python-runtime.part03.zip",
+          "size": 15329095,
+          "md5": "76ac522d9b2fa03185c4558534cddbb1"
+        },
+        {
+          "name": "python-runtime.part04.zip",
+          "size": 17560020,
+          "md5": "a2d33162db29490152b1352b3778a874"
+        },
+        {
+          "name": "python-runtime.part05.zip",
+          "size": 14500200,
+          "md5": "6ce13789e532082f6758f47201165175"
+        },
+        {
+          "name": "python-runtime.part06.zip",
+          "size": 18988663,
+          "md5": "ac04ac8c227bef0fa099d2b20611512b"
+        },
+        {
+          "name": "python-runtime.part07.zip",
+          "size": 2247595,
+          "md5": "842d19b3d198bec4149594b19f096205"
+        }
+      ]
+    },
+    "assets-gif": {
+      "target_dir": "assets/gif",
+      "parts": [
+        {
+          "name": "assets-gif.part01.zip",
+          "size": 43659373,
+          "md5": "4daca3ec1dad4a9544789f23cd957869"
+        },
+        {
+          "name": "assets-gif.part02.zip",
+          "size": 19327049,
+          "md5": "01b27027a07de65c58f54136fc2efee5"
+        }
+      ]
+    },
+    "assets-gif-hd": {
+      "target_dir": "assets/gif_hd",
+      "parts": [
+        {
+          "name": "assets-gif-hd.part01.zip",
+          "size": 43509688,
+          "md5": "96ad55edcfb1ff191b46c6f6bc400861"
+        },
+        {
+          "name": "assets-gif-hd.part02.zip",
+          "size": 41429735,
+          "md5": "fbb61e8a150f19cb92662feaee596711"
+        },
+        {
+          "name": "assets-gif-hd.part03.zip",
+          "size": 41300358,
+          "md5": "d7d3053cdbcba3caee5175f762d62548"
+        },
+        {
+          "name": "assets-gif-hd.part04.zip",
+          "size": 41082472,
+          "md5": "9fce61d7ee5fc0323030660efa7eb74c"
+        },
+        {
+          "name": "assets-gif-hd.part05.zip",
+          "size": 41293253,
+          "md5": "c3bfa3509070ac8b987dabf5b2eed1e5"
+        },
+        {
+          "name": "assets-gif-hd.part06.zip",
+          "size": 42857059,
+          "md5": "6fa1160d9ed6cd33d7de1e1c5d9e483c"
+        },
+        {
+          "name": "assets-gif-hd.part07.zip",
+          "size": 45174896,
+          "md5": "5335ab6422899a39ed26df7b5c92992d"
+        },
+        {
+          "name": "assets-gif-hd.part08.zip",
+          "size": 42210485,
+          "md5": "c143cbbb5b99e27aa224553bf046b20e"
+        },
+        {
+          "name": "assets-gif-hd.part09.zip",
+          "size": 41905101,
+          "md5": "52a25798640689dd5ea300bff3d39904"
+        },
+        {
+          "name": "assets-gif-hd.part10.zip",
+          "size": 43864401,
+          "md5": "39c2ec441b4b8a3be1e58ad5671e4ef5"
+        },
+        {
+          "name": "assets-gif-hd.part11.zip",
+          "size": 42663168,
+          "md5": "a5d0e46999aa72ed7c74f89edbb1e422"
+        },
+        {
+          "name": "assets-gif-hd.part12.zip",
+          "size": 39410596,
+          "md5": "3abff682ba77b6a82e63744b456686ae"
+        },
+        {
+          "name": "assets-gif-hd.part13.zip",
+          "size": 41172816,
+          "md5": "89c00e59d8c70349d7e87970020c1067"
+        },
+        {
+          "name": "assets-gif-hd.part14.zip",
+          "size": 44550602,
+          "md5": "deacf2e3910aab4427568546e53d3106"
+        },
+        {
+          "name": "assets-gif-hd.part15.zip",
+          "size": 29213507,
+          "md5": "9aa23140fb651030b7316f08b595468c"
+        },
+        {
+          "name": "assets-gif-hd.part16.zip",
+          "size": 45355469,
+          "md5": "d6cfca56d19162299b0fd24d88604417"
+        },
+        {
+          "name": "assets-gif-hd.part17.zip",
+          "size": 34742838,
+          "md5": "ee1799c93d77ae0b9969614b5c4e59f1"
+        },
+        {
+          "name": "assets-gif-hd.part18.zip",
+          "size": 41967934,
+          "md5": "146735c09d217436c382226860ba3e21"
+        },
+        {
+          "name": "assets-gif-hd.part19.zip",
+          "size": 44256540,
+          "md5": "bff828651ac0da0c9b9b6134a9170b0a"
+        },
+        {
+          "name": "assets-gif-hd.part20.zip",
+          "size": 42164591,
+          "md5": "9d3de59460d0728a6a2880befcdaba8d"
+        },
+        {
+          "name": "assets-gif-hd.part21.zip",
+          "size": 40411734,
+          "md5": "80a49205d39d7a6500908d1cd126ea69"
+        },
+        {
+          "name": "assets-gif-hd.part22.zip",
+          "size": 40672793,
+          "md5": "917c46bafeeb3d3d44800dcb4c20d36d"
+        },
+        {
+          "name": "assets-gif-hd.part23.zip",
+          "size": 45787332,
+          "md5": "f4ade053b6536167d66d54d9e3ea0686"
+        },
+        {
+          "name": "assets-gif-hd.part24.zip",
+          "size": 41728547,
+          "md5": "08ce8a1ab9f1b0e5e0e3544366ab3bd2"
+        },
+        {
+          "name": "assets-gif-hd.part25.zip",
+          "size": 33945814,
+          "md5": "aa876b520efe1c406c5ce49f3d9b1b02"
+        },
+        {
+          "name": "assets-gif-hd.part26.zip",
+          "size": 41750551,
+          "md5": "782c94642559a94eb3557b5a0332eaf0"
+        },
+        {
+          "name": "assets-gif-hd.part27.zip",
+          "size": 40578610,
+          "md5": "6a31dcd2b707fac4473424194c096b9d"
+        },
+        {
+          "name": "assets-gif-hd.part28.zip",
+          "size": 42098483,
+          "md5": "3e9fa6d2efb06017c4cf712f3a34c4c2"
+        },
+        {
+          "name": "assets-gif-hd.part29.zip",
+          "size": 44262662,
+          "md5": "0be271f0064eadf5b9a8fb93a517e954"
+        },
+        {
+          "name": "assets-gif-hd.part30.zip",
+          "size": 40535377,
+          "md5": "298b97690d4cc444b7a943fe254680ba"
+        },
+        {
+          "name": "assets-gif-hd.part31.zip",
+          "size": 41437286,
+          "md5": "de96b6f7694e624f53ecae3a8a9fe605"
+        },
+        {
+          "name": "assets-gif-hd.part32.zip",
+          "size": 41209465,
+          "md5": "81e5839dbe58d4809f32137dfc4197bb"
+        },
+        {
+          "name": "assets-gif-hd.part33.zip",
+          "size": 38912294,
+          "md5": "cbd4014a89f40242121944ef62201f74"
+        },
+        {
+          "name": "assets-gif-hd.part34.zip",
+          "size": 37142586,
+          "md5": "23508f88aa77f1af9bf53f35f6719c83"
+        },
+        {
+          "name": "assets-gif-hd.part35.zip",
+          "size": 40372019,
+          "md5": "333181a85572675389ffd80a902e77e1"
+        },
+        {
+          "name": "assets-gif-hd.part36.zip",
+          "size": 27363591,
+          "md5": "2aff760b044befeec4df8e281d1aaab1"
+        },
+        {
+          "name": "assets-gif-hd.part37.zip",
+          "size": 19252013,
+          "md5": "b6b662e8a2a57a380a024e6034c79539"
+        }
+      ]
+    }
+  },
+  "total_size": 1654857113
+}
