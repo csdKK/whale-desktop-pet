@@ -6,3 +6,4 @@ WhalePetInstaller.exe
 *.zip
 *.bin
 .idea/
+installer_resources/

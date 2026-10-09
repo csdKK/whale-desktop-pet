@@ -8,6 +8,7 @@ import sys
 import shutil
 import subprocess
 import glob
+import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUNDLE_DIR = os.path.join(ROOT, "installer_bundle")
@@ -279,36 +280,25 @@ def main():
         print("  已清理 python-embed.zip")
 
     print("=" * 50)
-    print("步骤 3/4: 复制源码和资源")
+    print("步骤 3/4: 打包核心文件（源码+小资源）")
     print("=" * 50)
-    source_files = [
+    core_files = [
         "main.py", "pet_window.py", "pet_config.py", "ai_monitor.py",
         "ai_chat.py", "balance.py", "animations.py", "gif_player.py",
         "splash.py", "requirements.txt",
-        "启动动画.mp4", "圆角-蓝色大肥鱼.ico",
+        "启动动画.mp4", "圆角-蓝色大肥鱼.ico", "AI聊天头像.png", "白色米饭.png",
     ]
-    source_dirs = ["assets"]
 
-    for name in source_files:
-        src = os.path.join(ROOT, name)
-        dst = os.path.join(BUNDLE_DIR, name)
-        if os.path.exists(src):
-            if os.path.isdir(src):
-                if os.path.exists(dst):
-                    shutil.rmtree(dst, ignore_errors=True)
-                shutil.copytree(src, dst)
-            else:
-                shutil.copy2(src, dst)
-            print(f"  复制: {name}")
-
-    for name in source_dirs:
-        src = os.path.join(ROOT, name)
-        dst = os.path.join(BUNDLE_DIR, name)
-        if os.path.isdir(src):
-            if os.path.exists(dst):
-                shutil.rmtree(dst, ignore_errors=True)
-            shutil.copytree(src, dst)
-            print(f"  复制目录: {name}")
+    core_zip = os.path.join(BUNDLE_DIR, "core.zip")
+    if os.path.exists(core_zip):
+        os.remove(core_zip)
+    with zipfile.ZipFile(core_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+        for name in core_files:
+            src = os.path.join(ROOT, name)
+            if os.path.exists(src):
+                zf.write(src, name)
+                print(f"  打包: {name}")
+    print(f"  core.zip 大小: {os.path.getsize(core_zip) / 1024 / 1024:.2f} MB")
 
     installer_src = os.path.join(ROOT, "installer", "installer.py")
     uninstaller_src = os.path.join(ROOT, "installer", "uninstaller.py")
