@@ -155,15 +155,22 @@ namespace WhalePetOnlineInstaller
             {
                 try
                 {
-                    string content = await httpClient.GetStringAsync(url);
-                    if (string.IsNullOrEmpty(content) || content.TrimStart().StartsWith("{"))
+                    using (var cts = new System.Threading.CancellationTokenSource(15000))
                     {
-                        if (!string.IsNullOrEmpty(content) && content.TrimStart().StartsWith("{"))
-                            return content;
-                        errors.AppendLine(url + " 返回内容为空");
-                        continue;
+                        using (var resp = await httpClient.GetAsync(url, cts.Token))
+                        {
+                            resp.EnsureSuccessStatusCode();
+                            string content = await resp.Content.ReadAsStringAsync();
+                            if (string.IsNullOrEmpty(content) || content.TrimStart().StartsWith("{"))
+                            {
+                                if (!string.IsNullOrEmpty(content) && content.TrimStart().StartsWith("{"))
+                                    return content;
+                                errors.AppendLine(url + " 返回内容为空");
+                                continue;
+                            }
+                            errors.AppendLine(url + " 返回内容非 JSON（前50字符: " + (content.Length > 50 ? content.Substring(0, 50) : content) + "）");
+                        }
                     }
-                    errors.AppendLine(url + " 返回内容非 JSON（前50字符: " + (content.Length > 50 ? content.Substring(0, 50) : content) + "）");
                 }
                 catch (Exception ex)
                 {
@@ -417,7 +424,8 @@ namespace WhalePetOnlineInstaller
             {
                 try
                 {
-                    using (var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+                    using (var cts = new System.Threading.CancellationTokenSource(30000))
+                    using (var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cts.Token))
                     {
                         response.EnsureSuccessStatusCode();
                         long? totalBytes = response.Content.Headers.ContentLength;
