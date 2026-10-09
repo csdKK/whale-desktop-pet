@@ -300,11 +300,6 @@ def main():
                 print(f"  打包: {name}")
     print(f"  core.zip 大小: {os.path.getsize(core_zip) / 1024 / 1024:.2f} MB")
 
-    installer_src = os.path.join(ROOT, "installer", "installer.py")
-    uninstaller_src = os.path.join(ROOT, "installer", "uninstaller.py")
-    shutil.copy2(installer_src, os.path.join(BUNDLE_DIR, "installer.py"))
-    shutil.copy2(uninstaller_src, os.path.join(BUNDLE_DIR, "uninstaller.py"))
-
     print("=" * 50)
     print("步骤 4/4: 生成启动脚本")
     print("=" * 50)
