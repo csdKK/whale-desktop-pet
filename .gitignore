@@ -5,3 +5,4 @@ installer_bundle/
 WhalePetInstaller.exe
 *.zip
 *.bin
+.idea/

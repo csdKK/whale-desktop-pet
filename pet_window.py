@@ -353,6 +353,7 @@ class PetWindow(QWidget):
         w = int(base_w * self._scale)
         h = int(base_h * self._scale)
         self.setFixedSize(w, h)
+        self.label.resize(w, h)
         self.bubble.set_bubble_scale(self._scale * 0.6)
 
     def _restore_position(self):
@@ -583,12 +584,25 @@ class PetWindow(QWidget):
         dlg.raise_()
         dlg.activateWindow()
         dlg.setFocus()
+        QTimer.singleShot(50, lambda: self._force_foreground(dlg))
+
+    @staticmethod
+    def _force_foreground(widget):
+        try:
+            import ctypes
+            hwnd = int(widget.winId())
+            ctypes.windll.user32.ShowWindow(hwnd, 9)  # SW_RESTORE
+            ctypes.windll.user32.SetForegroundWindow(hwnd)
+            ctypes.windll.user32.BringWindowToTop(hwnd)
+        except Exception:
+            pass
 
     def _apply_settings(self, new_cfg: dict):
         self.cfg.update(new_cfg)
         pet_config.save(self.cfg)
         self._scale = self.cfg["scale"]
         self._mirrored = self.cfg["mirrored"]
+        saved_pos = self.frameGeometry().topLeft()
         self._apply_window_size()
         self._auto_timer.setInterval(self.cfg["auto_action_sec"] * 1000)
         self.player.set_speed(self.cfg.get("anim_speed", 1.0))
@@ -611,6 +625,7 @@ class PetWindow(QWidget):
             self._monitor_timer.stop()
             self._monitor_statuses = {}
         set_autostart(self.cfg.get("auto_start", False))
+        self.move(saved_pos)
 
     def mousePressEvent(self, e):
         if e.button() == Qt.LeftButton:

@@ -3,7 +3,9 @@ $ErrorActionPreference = "Stop"
 $workDir = $PSScriptRoot
 $bundleDir = Join-Path $workDir "installer_bundle"
 $stubCs = Join-Path $workDir "_sfx_stub.cs"
-$outExe = Join-Path $workDir "WhalePetInstaller.exe"
+$outDir = Join-Path $workDir "安装程序exe"
+if (!(Test-Path $outDir)) { New-Item -ItemType Directory -Path $outDir | Out-Null }
+$outExe = Join-Path $outDir "WhalePetInstaller.exe"
 $zipPath = Join-Path $workDir "_bundle.zip"
 
 Write-Host "Step 1/3: Creating ZIP archive..."
