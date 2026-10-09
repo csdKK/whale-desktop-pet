@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+installer_bundle/
+安装程序exe/
+WhalePetInstaller.exe
+*.zip
+*.bin
