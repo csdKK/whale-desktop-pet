@@ -16,8 +16,14 @@ namespace WhalePetOnlineInstaller
 {
     public class InstallerForm : Form
     {
-        private const string MANIFEST_URL = "https://cdn.jsdelivr.net/gh/csdKK/whale-desktop-pet@v1.0.0/installer_resources/resources_manifest.json";
-        private const string CDN_BASE = "https://cdn.jsdelivr.net/gh/csdKK/whale-desktop-pet@v1.0.0/installer_resources/";
+        private static readonly string[] CDN_SOURCES = new string[]
+        {
+            "https://gh-proxy.com/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
+            "https://ghproxy.net/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
+            "https://ghps.cc/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
+            "https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/",
+        };
+        private static readonly string MANIFEST_URL = "https://gh-proxy.com/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json";
 
         private Label lblStatus;
         private ProgressBar progressBar;
@@ -127,14 +133,37 @@ namespace WhalePetOnlineInstaller
         private JavaScriptSerializer serializer = new JavaScriptSerializer();
         private Dictionary<string, object> currentManifest = null;
 
+        private async Task<string> FetchManifestJsonAsync()
+        {
+            string[] manifestUrls = new string[]
+            {
+                "https://gh-proxy.com/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
+                "https://ghproxy.net/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
+                "https://ghps.cc/https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
+                "https://github.com/csdKK/whale-desktop-pet/releases/download/v1.0.0/resources_manifest.json",
+            };
+            foreach (string url in manifestUrls)
+            {
+                try
+                {
+                    return await httpClient.GetStringAsync(url);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+            throw new Exception("所有镜像源均不可用");
+        }
+
         private async Task LoadManifestAsync()
         {
             try
             {
-                string json = await httpClient.GetStringAsync(MANIFEST_URL);
+                string json = await FetchManifestJsonAsync();
                 currentManifest = serializer.Deserialize<Dictionary<string, object>>(json);
                 long total = Convert.ToInt64(currentManifest["total_size"]);
-                lblSize.Text = string.Format("总下载大小：{0:.1f} MB（共 {1} 个文件）", total / 1024.0 / 1024.0, CountParts(currentManifest));
+                lblSize.Text = string.Format("总下载大小：{0:F1} MB（共 {1} 个文件）", total / 1024.0 / 1024.0, CountParts(currentManifest));
             }
             catch (Exception ex)
             {
@@ -196,7 +225,7 @@ namespace WhalePetOnlineInstaller
             lblStatus.Text = "正在获取资源清单...";
             progressBar.Value = 0;
 
-            string json = await httpClient.GetStringAsync(MANIFEST_URL);
+            string json = await FetchManifestJsonAsync();
             var manifest = serializer.Deserialize<Dictionary<string, object>>(json);
 
             int totalParts = CountParts(manifest);
@@ -226,15 +255,33 @@ namespace WhalePetOnlineInstaller
 
                         lblStatus.Text = string.Format("下载中：{0}（{1}/{2}）", partName, doneParts + 1, totalParts);
                         string partPath = Path.Combine(tempDir, partName);
-                        string url = CDN_BASE + partName;
 
-                        await DownloadWithProgressAsync(url, partPath, partMd5,
-                            (downloaded) =>
+                        bool downloaded = false;
+                        foreach (string baseUrl in CDN_SOURCES)
+                        {
+                            string url = baseUrl + partName;
+                            try
                             {
-                                long overall = doneBytes + downloaded;
-                                int pct = (int)((double)overall / totalBytes * 100);
-                                progressBar.Value = Math.Min(pct, 100);
-                            });
+                                await DownloadWithProgressAsync(url, partPath, partMd5,
+                                    (downloaded_bytes) =>
+                                    {
+                                        long overall = doneBytes + downloaded_bytes;
+                                        int pct = (int)((double)overall / totalBytes * 100);
+                                        progressBar.Value = Math.Min(pct, 100);
+                                    });
+                                downloaded = true;
+                                break;
+                            }
+                            catch (Exception)
+                            {
+                                if (File.Exists(partPath)) File.Delete(partPath);
+                                continue;
+                            }
+                        }
+                        if (!downloaded)
+                        {
+                            throw new Exception(string.Format("下载失败（所有镜像源均不可用）：{0}", partName));
+                        }
 
                         doneBytes += partSize;
                         doneParts++;
